@@ -45,7 +45,25 @@ public class GameSnake {
     }
 
     void go() {
+        frame = new JFrame(TITLE_OF_PROGRAMM + " : " + START_SNAKE_SIZE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //close work window
+        frame.setSize(FIELD_WIDTH*POINT_RADIUS+FIELD_DX,FIELD_HEIGHT*POINT_RADIUS+FIELD_DY); //frame size
+        frame.setLocation(START_LOCATION, START_LOCATION); //start position
+        frame.setResizable(false); //dont allow user to resize window
+
+        canvasPanel = new Canvas();
+        canvasPanel.setBackground(Color.white);
+
+
+        frame.setVisible(true);
 
     }
 
+    public class Canvas extends JPanel {
+
+        @Override
+        public void paint (Graphics g) {
+            super.paint(g);
+        }
+    }
 }
