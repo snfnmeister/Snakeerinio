@@ -52,7 +52,7 @@ public class GameSnake {
         frame.setResizable(false); //dont allow user to resize window
 
         canvasPanel = new Canvas();
-        canvasPanel.setBackground(Color.blue);
+        canvasPanel.setBackground(Color.green);
 
 
         frame.setVisible(true);
