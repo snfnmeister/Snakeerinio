@@ -52,7 +52,15 @@ public class GameSnake {
         frame.setResizable(false); //dont allow user to resize window
 
         canvasPanel = new Canvas();
-        canvasPanel.setBackground(Color.green);
+        canvasPanel.setBackground(Color.white);
+
+        frame.getContentPane().add(BorderLayout.CENTER, canvasPanel);
+        frame.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+//                snake.setDirection(e.getkeyCode());
+                System.out.println(e.getkeyCode);
+            }
+        });
 
 
         frame.setVisible(true);
