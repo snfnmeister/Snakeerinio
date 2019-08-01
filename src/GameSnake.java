@@ -1,6 +1,6 @@
 /*
-* Classic Game Snake
-* August 01, 2019 lesson*/
+ * Classic Game Snake
+ * August 01, 2019 lesson*/
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,7 +11,7 @@ public class GameSnake {
 
     //constants
     final String TITLE_OF_PROGRAMM = "Classic Game Snake";
-    final String GAME_OVER_MSG =  "GAME OVER";
+    final String GAME_OVER_MSG = "GAME OVER";
     final int POINT_RADIUS = 20; // circle radius in px
     final int FIELD_WIDTH = 30; // field size in POINT_RADIUS
     final int FIELD_HEIGHT = 20; // field size in POINT_RADIUS
@@ -22,7 +22,7 @@ public class GameSnake {
     final int START_SNAKE_X = 10;
     final int START_SNAKE_Y = 10;
     final int SHOW_DELAY = 150; // in ms
-    final int LEFT= 37; //move left (in keyboards codes)
+    final int LEFT = 37; //move left (in keyboards codes)
     final int RIGHT = 39; //move right
     final int UP = 38; // move UP
     final int DOWN = 40; // move DOWN
@@ -30,9 +30,16 @@ public class GameSnake {
     final Color DEFAULT_COLOR = Color.black;
     final Color FOOD_COLOR = Color.green;
     final Color POISON_COLOR = Color.red;
+    //Snake snake;
+    //Food food;
+    //Poison poison;
+    JFrame frame;
+    Canvas canvasPanel;
+    Random random = new Random();
+    boolean gameOver = false;
 
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         new GameSnake().go();
 
     }
