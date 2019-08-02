@@ -30,7 +30,7 @@ public class GameSnake {
     final Color DEFAULT_COLOR = Color.black;
     final Color FOOD_COLOR = Color.green;
     final Color POISON_COLOR = Color.red;
-    //Snake snake;
+    Snake snake;
     //Food food;
     //Poison poison;
     JFrame frame;
@@ -57,14 +57,90 @@ public class GameSnake {
         frame.getContentPane().add(BorderLayout.CENTER, canvasPanel);
         frame.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
-//                snake.setDirection(e.getkeyCode());
-                System.out.println(e.getkeyCode);
+                snake.setDirection(e.getKeyCode());
             }
         });
 
 
         frame.setVisible(true);
 
+        snake = new Snake(START_SNAKE_X, START_SNAKE_Y, START_SNAKE_SIZE,
+                START_DIRECTION);
+
+        while (!gameOver) { //game continue...
+            snake.move();
+            canvasPanel.repaint();
+            try {
+                 Thread.sleep(SHOW_DELAY);
+            } catch (InterruptedException e) { e.printStackTrace(); }
+        }
+
+    }
+
+    class Snake {
+        ArrayList<Point> snake = new ArrayList<Point>();
+        int direction;
+
+        public Snake(int x, int y, int length, int direction) { //snake constructor
+            for (int i=0; i < length; i++) {
+                Point point = new Point(x-i, y);
+                snake.add(point);
+            }
+            this.direction = direction;
+        }
+
+        void move() {
+            int x = snake.get(0).getX();
+            int y = snake.get(0).getY();
+            if (direction == LEFT) { x--;} //meh...
+            if (direction == RIGHT) { x++;}
+            if (direction == UP) { y--;}
+            if (direction == DOWN) {y++;}
+            if (x > FIELD_WIDTH - 1) { x = 0; }
+            if (x < 0) { x = FIELD_WIDTH - 1; }
+            if (y > FIELD_HEIGHT - 1) { y = 0; }
+            if (y < 0) { y = FIELD_HEIGHT - 1; }
+            snake.add(0,new Point(x,y));
+            snake.remove (snake.size() - 1); //delete snake-end
+
+        }
+
+        void setDirection (int direction) {
+            if (direction >= LEFT && direction <= DOWN) {
+                this.direction = direction;
+
+            }
+
+        }
+
+        void paint (Graphics g) {                //Snake draw
+            for (Point point : snake) {
+                point.paint(g);
+            }
+        }
+
+        }
+
+    class Point {
+        int x, y;
+        Color color = DEFAULT_COLOR;
+
+        public Point (int x, int y) { //constructor
+            this.setXY(x,y);
+        }
+
+        void paint(Graphics g) {
+            g.setColor(color);
+            g.fillOval(x*POINT_RADIUS, y*POINT_RADIUS, POINT_RADIUS, POINT_RADIUS);
+        }
+
+        int getX() { return x;} //getters
+        int getY() { return y;}
+
+        void setXY(int x, int y) { //interesting...
+            this.x=x;
+            this.y=y;
+        }
     }
 
     public class Canvas extends JPanel {
@@ -72,6 +148,7 @@ public class GameSnake {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
+            snake.paint(g);
         }
     }
 }
