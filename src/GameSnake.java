@@ -32,7 +32,7 @@ public class GameSnake {
     final Color POISON_COLOR = Color.red;
     Snake snake;
     Food food;
-    //Poison poison;
+    Poison poison;
     JFrame frame;
     Canvas canvasPanel;
     Random random = new Random();
@@ -49,7 +49,7 @@ public class GameSnake {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //close work window
         frame.setSize(FIELD_WIDTH * POINT_RADIUS + FIELD_DX, FIELD_HEIGHT * POINT_RADIUS + FIELD_DY); //frame size
         frame.setLocation(START_LOCATION, START_LOCATION); //start position
-        frame.setResizable(false); //dont allow user to resize window
+        frame.setResizable(false); //don't allow user to resize window
 
         canvasPanel = new Canvas();
         canvasPanel.setBackground(Color.white);
@@ -95,7 +95,7 @@ public class GameSnake {
             this.direction = direction;
         }
 
-        boolean isInsideSnake (int x, int y) {
+        boolean isInsideSnake(int x, int y) {
             for (Point point : snake) {
                 if ((point.getX() == x) && (point.getY() == y)) {
                     return true;
@@ -137,6 +137,7 @@ public class GameSnake {
             if (y < 0) {
                 y = FIELD_HEIGHT - 1;
             }
+            gameOver = isInsideSnake(x, y); //check for cross snake itselves
             snake.add(0, new Point(x, y)); //add snake element
             if (isFood(food)) {
                 food.eat();
@@ -144,16 +145,16 @@ public class GameSnake {
             } else {
                 snake.remove(snake.size() - 1);
             }
-//            snake.remove(snake.size() - 1); //delete snake-end
 
         }
 
         void setDirection(int direction) {
-            if (direction >= LEFT && direction <= DOWN) {
-                this.direction = direction;
+            if ((direction >= LEFT && direction <= DOWN)) {
+                if (Math.abs(this.direction - direction) != 2) { //dont allow snake move itself
+                    this.direction = direction;
 
+                }
             }
-
         }
 
         void paint(Graphics g) {                //Snake draw
@@ -179,14 +180,45 @@ public class GameSnake {
             return this.getX() == -1;
         }
 
+        boolean isFood(int x, int y) { return (this.x == x) && (this.y == y); }
+
+
         void next() { //create FOOD
             int x, y;
             do {
-                x = random.nextInt(FIELD_WIDTH);
-                y = random.nextInt(FIELD_HEIGHT);
+                x = random.nextInt(FIELD_WIDTH-1); //don't create food on field border
+                y = random.nextInt(FIELD_HEIGHT-1);
             } while (snake.isInsideSnake(x, y));
             this.setXY(x, y);
         }
+
+    }
+
+    class Poison {
+        private ArrayList<Point> poison = new ArrayList<Point>();
+//        int x, y;
+
+        boolean isPoison(int x, int y) {
+            for (Point point : poison) if ((point.getX() == x) && (point.getY() == y)) return true;
+            return false;
+        }
+
+        void add() {
+            int x, y;
+            do {
+                x = random.nextInt(FIELD_WIDTH-1);
+                y = random.nextInt(FIELD_HEIGHT-1);
+            } while (isPoison(x, y) || snake.isInsideSnake(x, y) || food.isFood(x, y));
+            poison.add(new Point(x, y)); //, POISON_COLOR));
+        }
+
+//        void paint(Graphics g) {
+//            g.setColor(POISON_COLOR);
+//            g.fillOval( * POINT_RADIUS, Point.getY()* POINT_RADIUS, POINT_RADIUS, POINT_RADIUS);
+//            for (Point point : poison) {
+//                point.paint(g);
+//        }
+
 
     }
 
@@ -224,6 +256,14 @@ public class GameSnake {
             super.paint(g);
             snake.paint(g);
             food.paint(g);
+//            poison.paint(g);
+            if (gameOver) {
+                g.setColor(Color.red);
+                g.setFont(new Font("Arial", Font.BOLD, 60));
+                FontMetrics fm = g.getFontMetrics();
+                g.drawString(GAME_OVER_MSG, (FIELD_WIDTH * POINT_RADIUS + FIELD_DX - fm.stringWidth(GAME_OVER_MSG)) / 2,
+                        (FIELD_HEIGHT * POINT_RADIUS + FIELD_DY) / 2);
+            }
         }
     }
 }
